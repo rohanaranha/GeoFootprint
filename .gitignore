@@ -1,0 +1,7 @@
+.apt_generated/
+bin/
+gen/
+proguard/
+.factorypath
+.classpath
+project.propertie
