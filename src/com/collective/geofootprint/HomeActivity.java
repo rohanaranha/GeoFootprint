@@ -13,10 +13,8 @@ import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class HomeActivity extends Activity implements LocationListener {
+public class HomeActivity extends Activity{
 
-	private TextView latField;
-	private TextView longField;
 	  private LocationManager locationManager;
 	  private String provider;
 	
@@ -24,33 +22,52 @@ public class HomeActivity extends Activity implements LocationListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_home);
-		latField = (TextView) findViewById(R.id.latTxtView);
-		longField = (TextView) findViewById(R.id.longTxtView);
-		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+		
+		LocationManager locManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+        LocationListener locListener = new MyLocationListener();
+        locManager.requestLocationUpdates( LocationManager.GPS_PROVIDER, 35000, 10,locListener);
+    
 	}
 	
-	@Override
-	public void onLocationChanged(Location location) {
-	latField = (TextView) findViewById(R.id.latTxtView);
-	latField.setText("Latitude:" + location.getLatitude() + ", Longitude:" + location.getLongitude());
-	}
+	/* Class My Location Listener */
 
-	@Override
-	public void onProviderDisabled(String provider) {
-	Log.d("Latitude","disable");
-	}
+    public class MyLocationListener implements LocationListener
+    {
+    	TextView currentLocationTxtView = (TextView) findViewById(R.id.currentLocationTxtView);
+    	
+        @Override
+        public void onLocationChanged(Location loc){
+            Log.d("tag", "Finding Latitude");
+            double lat = loc.getLatitude();
+            Log.d("tag", "Lat: "+String.valueOf(lat));
+            Log.d("tag", "Finding Longitude");
+            double lon = loc.getLongitude();
+            Log.d("tag", "Lon: "+String.valueOf(lon));
+            String Text = "My current location is: " +
+            "\nLatitude = " + lat +
+            "\nLongitude = " + lon;
 
-	@Override
-	public void onProviderEnabled(String provider) {
-	Log.d("Latitude","enable");
-	}
+            // Display location
+            currentLocationTxtView.setText(Text);
+        }
 
-	@Override
-	public void onStatusChanged(String provider, int status, Bundle extras) {
-	Log.d("Latitude","status");
-	}
-	
+        @Override
+        public void onProviderDisabled(String provider){
+            Toast.makeText(getApplicationContext(), "Gps Disabled", Toast.LENGTH_SHORT ).show();
+        }
+
+        @Override
+        public void onProviderEnabled(String provider){
+            Toast.makeText(getApplicationContext(), "Gps Enabled", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras){
+
+        }
+    }
+
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
