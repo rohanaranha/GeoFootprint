@@ -1,5 +1,7 @@
 package com.collective.geofootprint;
 
+import org.androidannotations.annotations.ViewById;
+
 import android.app.Activity;
 import android.content.Context;
 import android.location.Criteria;
@@ -17,6 +19,9 @@ public class HomeActivity extends Activity{
 
 	  private LocationManager locationManager;
 	  private String provider;
+	  
+	  @ViewById
+	  TextView currentLocationTxtView;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +38,6 @@ public class HomeActivity extends Activity{
 
     public class MyLocationListener implements LocationListener
     {
-    	TextView currentLocationTxtView = (TextView) findViewById(R.id.currentLocationTxtView);
     	
         @Override
         public void onLocationChanged(Location loc){
